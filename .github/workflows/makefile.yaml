@@ -1,4 +1,4 @@
-name: Tests des Actes (Clang)
+name: Tests des Actes
 
 # Déclencheurs (identiques à l'exemple précédent)
 on:
@@ -6,11 +6,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    
+  workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
     # 1. Récupération du code
     - uses: actions/checkout@v4
