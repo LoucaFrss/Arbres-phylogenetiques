@@ -1,0 +1,41 @@
+name: Tests des Actes (Clang)
+
+# Déclencheurs (identiques à l'exemple précédent)
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Récupération du code
+    - uses: actions/checkout@v4
+
+    # 2. Compilation (Étape unique pour s'assurer que tout est prêt)
+    - name: Compilation
+      # On utilise 'make' qui va compiler tous les executables de test (acte1, acte2, etc.)
+      run: make
+
+    # 3. Test de l'Acte 1 (Étape séparée)
+    - name: Test Acte 1
+      run: make tests_acte1
+
+    # 4. Test de l'Acte 2 (Étape séparée)
+    - name: Test Acte 2
+      run: make tests_acte2
+
+    # 5. Test de l'Acte 3 (Étape séparée)
+    - name: Test Acte 3
+      run: make tests_acte3
+
+    # 6. Test de l'Acte 3B (Étape séparée)
+    - name: Test Acte 3B
+      run: make tests_acte3b
+
+    # 7. Test de l'Acte 4 (Étape séparée)
+    - name: Test Acte 4
+      run: make tests_acte4
