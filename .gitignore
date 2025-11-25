@@ -1,0 +1,29 @@
+# --- Compilation C ---
+# Ignore les fichiers objets (.o)
+*.o
+
+# Ignore tes exécutables spécifiques
+# (Ajoute ici le nom de ton programme final)
+mon_programme
+mon_programme.exe
+test_unitaires
+
+# Dossiers de build (si tu utilises Make ou CMake)
+build/
+bin/
+obj/
+
+main
+acte1
+acte2
+acte3
+acte4
+acte3b
+
+
+# --- IDE et Éditeurs ---
+# Ignore le dossier de configuration VS Code
+.vscode/
+
+# Ignore les fichiers système Mac (si toi ou un collègue est sur Mac)
+.DS_Store
