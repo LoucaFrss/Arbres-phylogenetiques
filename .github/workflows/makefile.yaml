@@ -3,10 +3,10 @@ name: Tests des Actes
 # Déclencheurs (identiques à l'exemple précédent)
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "main" ]
-    
+    branches: [ "master" ]
+
   workflow_dispatch:
 
 jobs:
