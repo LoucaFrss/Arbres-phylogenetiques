@@ -1,67 +1,55 @@
 # .github/workflows/test-actes.yml
 
-name: Tests des Actes Cumulatifs
+name: Tests des Actes Cumulatifs (Clang)
 
 on:
   push:
     branches: [ "*" ] 
   pull_request:
-    branches: [ "master" ] # Cible la branche master
+    branches: [ "master" ]
   workflow_dispatch: 
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
-    # Définition des variables de la branche courante
-    env:
-      # github.ref_name donne le nom de la branche sans 'refs/heads/' (ex: 'acte1', 'master')
-      BRANCH_NAME: ${{ github.ref_name }} 
-      
-      # Logique cumulative : Vrai si la branche contient le nom de l'acte ou un acte supérieur
-      # Note : 'master' est toujours inclus
-      
-      # Acte 1 ou plus
-      IS_A1_OR_ABOVE: ${{ contains(env.BRANCH_NAME, 'acte1') || contains(env.BRANCH_NAME, 'acte2') || contains(env.BRANCH_NAME, 'acte3') || contains(env.BRANCH_NAME, 'acte3b') || contains(env.BRANCH_NAME, 'acte4') || env.BRANCH_NAME == 'master' }}
-      
-      # Acte 2 ou plus
-      IS_A2_OR_ABOVE: ${{ contains(env.BRANCH_NAME, 'acte2') || contains(env.BRANCH_NAME, 'acte3') || contains(env.BRANCH_NAME, 'acte3b') || contains(env.BRANCH_NAME, 'acte4') || env.BRANCH_NAME == 'master' }}
-
-      # Acte 3 ou plus
-      IS_A3_OR_ABOVE: ${{ contains(env.BRANCH_NAME, 'acte3') || contains(env.BRANCH_NAME, 'acte3b') || contains(env.BRANCH_NAME, 'acte4') || env.BRANCH_NAME == 'master' }}
-      
-      # Acte 3B ou plus
-      IS_A3B_OR_ABOVE: ${{ contains(env.BRANCH_NAME, 'acte3b') || contains(env.BRANCH_NAME, 'acte4') || env.BRANCH_NAME == 'master' }}
-      
-      # Acte 4 ou plus
-      IS_A4_OR_ABOVE: ${{ contains(env.BRANCH_NAME, 'acte4') || env.BRANCH_NAME == 'master' }}
-      
-
+    
+    # ⭐ CORRECTION MAJEURE : On utilise 'vars' ou 'env' juste pour la compilation, 
+    # mais pour les conditions 'if', on doit utiliser directement le contexte 'github'
+    
     steps:
     - uses: actions/checkout@v4
 
-    # Compilation
+    # --- Compilation (utilise la variable d'environnement pour 'make') ---
     - name: 🛠️ Compilation (Clang)
-      run: make CC=clang
-
-    # 🧪 Tests cumulatifs
+      env: # On définit env ici pour la commande 'run'
+        CC_COMPILER: clang # Définir la variable CC ici
+      run: make CC=${{ env.CC_COMPILER }} # Utilisation de la variable env
+      
+    # --- Tests cumulatifs avec conditions 'if' ---
     
+    # ⭐ NOTE: La variable 'github.ref_name' est utilisée directement dans les conditions 'if'
+    
+    # 🔬 Test Acte 1 (Acte 1 ou supérieur)
     - name: 🔬 Test Acte 1
-      if: ${{ env.IS_A1_OR_ABOVE == 'true' }}
+      if: ${{ contains(github.ref_name, 'acte1') || contains(github.ref_name, 'acte2') || contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
       run: make tests_acte1 CC=clang
 
+    # 🔬 Test Acte 2 (Acte 2 ou supérieur)
     - name: 🔬 Test Acte 2
-      if: ${{ env.IS_A2_OR_ABOVE == 'true' }}
+      if: ${{ contains(github.ref_name, 'acte2') || contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
       run: make tests_acte2 CC=clang
 
+    # 🔬 Test Acte 3 (Acte 3 ou supérieur)
     - name: 🔬 Test Acte 3
-      if: ${{ env.IS_A3_OR_ABOVE == 'true' }}
+      if: ${{ contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
       run: make tests_acte3 CC=clang
 
+    # 🔬 Test Acte 3B (Acte 3B ou supérieur)
     - name: 🔬 Test Acte 3B
-      if: ${{ env.IS_A3B_OR_ABOVE == 'true' }}
+      if: ${{ contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
       run: make tests_acte3b CC=clang
       
+    # 🔬 Test Acte 4 (Acte 4 ou supérieur)
     - name: 🔬 Test Acte 4
-      if: ${{ env.IS_A4_OR_ABOVE == 'true' }}
+      if: ${{ contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
       run: make tests_acte4 CC=clang
