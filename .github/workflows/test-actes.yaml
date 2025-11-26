@@ -1,0 +1,55 @@
+# .github/workflows/test-actes.yml
+
+name: Tests des Actes Cumulatifs (Clang)
+
+on:
+  push:
+    branches: [ "*" ] 
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch: 
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    # ⭐ CORRECTION MAJEURE : On utilise 'vars' ou 'env' juste pour la compilation, 
+    # mais pour les conditions 'if', on doit utiliser directement le contexte 'github'
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    # --- Compilation (utilise la variable d'environnement pour 'make') ---
+    - name: 🛠️ Compilation (Clang)
+      env: # On définit env ici pour la commande 'run'
+        CC_COMPILER: clang # Définir la variable CC ici
+      run: make CC=${{ env.CC_COMPILER }} # Utilisation de la variable env
+      
+    # --- Tests cumulatifs avec conditions 'if' ---
+    
+    # ⭐ NOTE: La variable 'github.ref_name' est utilisée directement dans les conditions 'if'
+    
+    # 🔬 Test Acte 1 (Acte 1 ou supérieur)
+    - name: 🔬 Test Acte 1
+      if: ${{ contains(github.ref_name, 'acte1') || contains(github.ref_name, 'acte2') || contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
+      run: make tests_acte1 CC=clang
+
+    # 🔬 Test Acte 2 (Acte 2 ou supérieur)
+    - name: 🔬 Test Acte 2
+      if: ${{ contains(github.ref_name, 'acte2') || contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
+      run: make tests_acte2 CC=clang
+
+    # 🔬 Test Acte 3 (Acte 3 ou supérieur)
+    - name: 🔬 Test Acte 3
+      if: ${{ contains(github.ref_name, 'acte3') || contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
+      run: make tests_acte3 CC=clang
+
+    # 🔬 Test Acte 3B (Acte 3B ou supérieur)
+    - name: 🔬 Test Acte 3B
+      if: ${{ contains(github.ref_name, 'acte3b') || contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
+      run: make tests_acte3b CC=clang
+      
+    # 🔬 Test Acte 4 (Acte 4 ou supérieur)
+    - name: 🔬 Test Acte 4
+      if: ${{ contains(github.ref_name, 'acte4') || github.ref_name == 'master' }}
+      run: make tests_acte4 CC=clang
