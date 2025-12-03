@@ -1,6 +1,8 @@
 # --- Compilation C ---
 # Ignore les fichiers objets (.o)
 *.o
+*.png
+*.dot
 
 # Ignore tes exécutables spécifiques
 # (Ajoute ici le nom de ton programme final)
@@ -19,6 +21,8 @@ acte2
 acte3
 acte4
 acte3b
+graphviz
+recherche-AppoLab
 
 
 # --- IDE et Éditeurs ---
