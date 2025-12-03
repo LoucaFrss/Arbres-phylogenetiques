@@ -25,9 +25,10 @@ char buffer[MAX_WORD_SIZE + 1];
 static char next_char = ' ';
 
 /* Supprime tous les espaces, tabulations, retour à la ligne */
-#define GLOB(f)                                                                \
-    while (isspace(next_char)) {                                               \
-        next_char = fgetc(f);                                                  \
+#define GLOB(f)                \
+    while (isspace(next_char)) \
+    {                          \
+        next_char = fgetc(f);  \
     }
 
 /* Fonction récursive qui lit un sous-arbre */
@@ -39,16 +40,19 @@ arbre lire_arbre(FILE *f)
 
     GLOB(f); /* lit dans next_char le premier caractère non vide */
 
-    if (next_char == '/') {
+    if (next_char == '/')
+    {
         next_char = ' '; /* on ne garde pas '/' en mémoire */
         return NULL;
     }
 
-    if (next_char == ')') {
+    if (next_char == ')')
+    {
         return NULL;
     }
 
-    if (next_char != '(') {
+    if (next_char != '(')
+    {
         fprintf(stderr,
                 "Error while reading binary tree : '(' or ')' expected at "
                 "position %ld\n",
@@ -61,7 +65,8 @@ arbre lire_arbre(FILE *f)
     next_char = ' ';
     GLOB(f);
 
-    do {
+    do
+    {
         *p = next_char; /* sauvegarde du char courant */
         next_char = fgetc(f);
         p++;
@@ -75,16 +80,20 @@ arbre lire_arbre(FILE *f)
 
     GLOB(f);
 
-    if (next_char == ')') {
+    if (next_char == ')')
+    {
         next_char = ' '; /* on est sur une feuille, on prépare la lecture du
                             prochain nœud */
-    } else {
+    }
+    else
+    {
         racine->gauche = lire_arbre(f); /* appel récursif pour le fils gauche */
         racine->droit = lire_arbre(f);  /* idem pour le droit */
 
         GLOB(f); /* lit jusqu'au ')' fermant */
 
-        if (next_char != ')') {
+        if (next_char != ')')
+        {
             fprintf(stderr, "Error while reading binary tree: ')' expected\n");
             exit(1);
         }
@@ -93,10 +102,8 @@ arbre lire_arbre(FILE *f)
     return racine;
 }
 
-
 void affiche_arbre(noeud *racine)
 {
-       printf ("<<<<< À faire: fonction affiche_arbre fichier " __FILE__ " >>>>>\n");
+    printf("<<<<< À faire: fonction affiche_arbre fichier " __FILE__ " >>>>>\n");
     /* à remplir */
 }
-
