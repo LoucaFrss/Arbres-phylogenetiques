@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac)
+void analyse_arbre2(arbre racine, int *nb_esp, int *nb_carac)
 {
 
        if (!racine)
@@ -16,11 +16,17 @@ void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac)
        {
               (*nb_carac)++;
               // On explore recursivement les sous-noeuds.
-              analyse_arbre(racine->gauche, nb_esp, nb_carac);
-              analyse_arbre(racine->droit, nb_esp, nb_carac);
+              analyse_arbre2(racine->gauche, nb_esp, nb_carac);
+              analyse_arbre2(racine->droit, nb_esp, nb_carac);
        }
        else // Si la racine n'a pas de sous-noeud, c'est une espèce.
               (*nb_esp)++;
+}
+void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac)
+{
+       *nb_carac = 0;
+       *nb_esp = 0;
+       analyse_arbre2(racine, nb_esp, nb_carac);
 }
 
 int est_caractere(arbre racine)
@@ -59,9 +65,45 @@ int rechercher_espece(arbre racine, char *espece, liste_t *seq)
  * message d'erreur.
  */
 int ajouter_espece(arbre *a, char *espece, cellule_t *seq)
-{
 
-       return 1;
+{
+       if (!(*a))
+       {
+              *a = nouveau_noeud();
+              if (!seq)
+              {
+                     (*a)->valeur = espece;
+                     return 0;
+              }
+
+              (*a)->valeur = seq->val;
+              return ajouter_espece(&(*a)->droit, espece, seq->suivant);
+       }
+       if (!seq)
+       {
+              if (est_espece(*a))
+              {
+                     return 1;
+              }
+              return ajouter_espece(&(*a)->gauche, espece, NULL);
+       }
+       if (est_espece(*a))
+       {
+              (*a)->gauche = nouveau_noeud();
+              (*a)->gauche->valeur = (*a)->valeur;
+              (*a)->valeur = seq->val;
+              return ajouter_espece(&(*a)->droit, espece, seq->suivant);
+       }
+       if (strcmp((*a)->valeur, seq->val) == 0)
+       {
+              if (!(*a)->droit)
+              {
+                     (*a)->droit = nouveau_noeud();
+                     (*a)->droit->valeur = seq->val;
+              }
+              return ajouter_espece(&(*a)->droit, espece, seq->suivant);
+       }
+       return ajouter_espece(&(*a)->gauche, espece, seq);
 }
 
 /* Doit afficher la liste des caractéristiques niveau par niveau, de gauche
