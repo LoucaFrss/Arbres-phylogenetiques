@@ -2,7 +2,7 @@ all: main acte1 acte2 acte3 acte3b acte4 recherche-AppoLab ents
 
 
 CC=clang
-CFLAGS+= -g -Wall -Wextra -Werror -Wno-unused-parameter -gdwarf-4
+CFLAGS+= -g -Wall -Wextra -Werror -Wformat -Wno-unused-parameter -gdwarf-4
 
 
 tests_acte1: acte1
