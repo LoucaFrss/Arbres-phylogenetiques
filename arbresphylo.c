@@ -83,6 +83,7 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq)
        {
               if (est_espece(*a))
               {
+                     printf("Ne peut ajouter %s: possède les mêmes caractères que %s.\n", espece, (*a)->valeur);
                      return 1;
               }
               return ajouter_espece(&(*a)->gauche, espece, NULL);
@@ -112,7 +113,36 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq)
  */
 void afficher_par_niveau(arbre racine, FILE *fout)
 {
-       printf("<<<<< À faire: fonction afficher_par_niveau fichier " __FILE__ " >>>>>\n");
+       if (!racine)
+              return;
+
+       liste_t *l = malloc(sizeof(liste_t));
+       init_liste_vide(l);
+       liste_t *l2 = malloc(sizeof(liste_t));
+       init_liste_vide(l2);
+       ajouter_tete(l, racine);
+       while (l->tete || l2->tete)
+       {
+              while (l->tete)
+              {
+                     // printf("test\n");
+                     arbre a = retirer_tete(l);
+                     if (est_caractere(a))
+                     {
+                            fprintf(fout, "%s ", a->valeur);
+                            if (a->gauche)
+                                   ajouter_queue(l2, a->gauche);
+
+                            if (a->droit)
+                                   ajouter_queue(l2, a->droit);
+                     }
+              }
+              fprintf(fout, "\n");
+
+              liste_t *l_tmp = l;
+              l = l2;
+              l2 = l_tmp;
+       }
 }
 
 // Acte 4

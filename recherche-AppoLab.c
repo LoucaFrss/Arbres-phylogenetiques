@@ -14,7 +14,7 @@ int main()
     }
     while (l->tete)
     {
-        printf("%s ", l->tete->val);
+        printf("%s ", (char *)l->tete->val);
         cellule_t *cel = l->tete;
         l->tete = l->tete->suivant;
         free(cel);
