@@ -83,6 +83,7 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq)
        {
               if (est_espece(*a))
               {
+                     printf("Ne peut ajouter %s: possède les mêmes caractères que %s.\n", espece, (*a)->valeur);
                      return 1;
               }
               return ajouter_espece(&(*a)->gauche, espece, NULL);
