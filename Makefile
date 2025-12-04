@@ -1,4 +1,4 @@
-all: main acte1 acte2 acte3 acte3b acte4 recherche-AppoLab
+all: main acte1 acte2 acte3 acte3b acte4 recherche-AppoLab ents
 
 
 CC=clang
@@ -33,6 +33,7 @@ acte4: acte4.o $(OBJS)
 # comment créer les .o à partir des .c
 main: main.o arbresphylo.o arbres.o listes.o
 recherche-AppoLab: recherche-AppoLab.o arbresphylo.o arbres.o listes.o
+ents: ents.o arbresphylo.o arbres.o listes.o
 
 clean:
 	rm -f main *.o
