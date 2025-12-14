@@ -3,6 +3,7 @@
 *.o
 *.png
 *.dot
+*.svg
 
 # Ignore tes exécutables spécifiques
 # (Ajoute ici le nom de ton programme final)

@@ -2,7 +2,8 @@ all: main acte1 acte2 acte3 acte3b acte4 recherche-AppoLab ents
 
 
 CC=clang
-CFLAGS+= -g -Wall -Wextra -Werror -Wformat -Wno-unused-parameter -gdwarf-4
+CFLAGS+= -g -Wall -Wextra -Werror -Wformat -Wno-unused-parameter -gdwarf-4 #-fsanitize=address #-fsanitize=leak -fno-omit-frame-pointer
+LDFLAGS+= #-fsanitize=address #-fsanitize=leak -fno-omit-frame-pointer
 
 
 tests_acte1: acte1
@@ -20,7 +21,7 @@ tests_acte3b: acte3b
 tests_acte4: acte4
 	@set -e; for f in $$(cat tests_acte4/liste.txt); do echo Test: $$f; ./acte4 tests_acte4/$$f; done; printf "\033[0;32mSuccès\033[0m sur l'acte IV !\n"
 
-OBJS= arbres.o arbresphylo.o listes.o common_tests.o
+OBJS= arbres.o arbresphylo.o listes.o common_tests.o graphviz.o
 acte1: acte1.o $(OBJS)
 acte2: acte2.o $(OBJS)
 acte3: acte3.o $(OBJS)
@@ -31,9 +32,9 @@ acte4: acte4.o $(OBJS)
 
 # Ici, on utilise l'"intelligence" de 'make' qui saura tout seul
 # comment créer les .o à partir des .c
-main: main.o arbresphylo.o arbres.o listes.o
-recherche-AppoLab: recherche-AppoLab.o arbresphylo.o arbres.o listes.o
-ents: ents.o arbresphylo.o arbres.o listes.o
+main: main.o arbresphylo.o arbres.o listes.o graphviz.o
+recherche-AppoLab: recherche-AppoLab.o arbresphylo.o arbres.o listes.o graphviz.o
+ents: ents.o arbresphylo.o arbres.o listes.o graphviz.o
 
 clean:
 	rm -f main *.o

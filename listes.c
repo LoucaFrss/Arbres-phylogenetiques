@@ -71,3 +71,12 @@ int ajouter_queue(liste_t *L, void *c)
 
     return 0;
 }
+
+void afficher_liste(liste_t *l)
+{
+    for (cellule_t *c = l->tete; c; c = c->suivant)
+    {
+        printf("%s ", (char *)c->val);
+    }
+    printf("\n");
+}

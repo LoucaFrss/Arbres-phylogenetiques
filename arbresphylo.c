@@ -1,4 +1,5 @@
 #include "arbresphylo.h"
+#include "graphviz.h"
 #include "arbres.h"
 #include "listes.h"
 #include <assert.h>
@@ -147,8 +148,108 @@ void afficher_par_niveau(arbre racine, FILE *fout)
 
 // Acte 4
 
+int contient_liste(liste_t *l, char *v)
+{
+       for (cellule_t *c = l->tete; c != NULL; c = c->suivant)
+       {
+              if (strcmp(c->val, v) == 0)
+                     return 1;
+       }
+       return 0;
+}
+
+void collecter_especes(arbre a, liste_t *especes)
+{
+       if (!a)
+              return;
+       if (est_espece(a))
+       {
+              ajouter_queue(especes, a->valeur);
+       }
+       else
+       {
+              collecter_especes(a->gauche, especes);
+              collecter_especes(a->droit, especes);
+       }
+}
+
+int verifier_et_compter(arbre a, liste_t *l, int *compte)
+{
+       if (!a)
+              return 1;
+       if (est_espece(a))
+       {
+              if (contient_liste(l, a->valeur))
+              {
+                     (*compte)++;
+                     return 1;
+              }
+              else
+              {
+                     return 0;
+              }
+       }
+       else
+       {
+              int gauche_ok = verifier_et_compter(a->gauche, l, compte);
+              int droit_ok = verifier_et_compter(a->droit, l, compte);
+              return gauche_ok && droit_ok;
+       }
+}
+
+int est_clade(arbre a, liste_t *l)
+{
+       int compte = 0;
+       int tous_presents = verifier_et_compter(a, l, &compte);
+       if (!tous_presents)
+              return 0;
+
+       // Compter la longueur de la liste
+       int longueur_l = 0;
+       cellule_t *c = l->tete;
+       while (c)
+       {
+              longueur_l++;
+              c = c->suivant;
+       }
+
+       return compte == longueur_l;
+}
+
+arbre *trouve_clade(arbre *a, liste_t *l)
+{
+       if (!*a)
+              return NULL;
+       if (est_clade(*a, l))
+              return a;
+       arbre *gauche = trouve_clade(&((*a)->gauche), l);
+       if (gauche)
+              return gauche;
+       arbre *droit = trouve_clade(&((*a)->droit), l);
+       if (droit)
+              return droit;
+       return NULL;
+}
+
 int ajouter_carac(arbre *a, char *carac, cellule_t *seq)
 {
-       printf("<<<<< À faire: fonction ajouter_carac fichier " __FILE__ " >>>>>\n");
-       return 0;
+       if (!(*a))
+       {
+              return 1;
+       }
+       liste_t especes;
+       especes.tete = seq;
+       especes.queue = NULL;
+
+       arbre *a2 = trouve_clade(a, &especes);
+       if (!a2)
+              return 0;
+
+       // Ajouter un nouveau noeud
+       arbre n = nouveau_noeud();
+       n->droit = *a2;
+       *a2 = n;
+       n->valeur = carac;
+
+       return 1;
 }

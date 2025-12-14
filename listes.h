@@ -36,5 +36,6 @@ void liberer_liste(liste_t *L);
 int ajouter_tete(liste_t *L, void *c);
 int ajouter_queue(liste_t *L, void *c);
 void *retirer_tete(liste_t *L);
+void afficher_liste(liste_t *l);
 
 #endif /* _LISTES_H */

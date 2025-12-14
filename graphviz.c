@@ -25,10 +25,10 @@ void ecrire_graphviz(FILE *f, arbre a)
     fprintf(f, "}\n");
 }
 
-int main()
-{
-    FILE *f = fopen("./tests/arbre-simple.test", "r");
-    arbre a = lire_arbre(f);
-    FILE *f2 = fopen("./affichage.dot", "w");
-    ecrire_graphviz(f2, a);
-}
+// int main()
+// {
+//     FILE *f = fopen("./tests/arbre-simple.test", "r");
+//     arbre a = lire_arbre(f);
+//     FILE *f2 = fopen("./affichage.dot", "w");
+//     ecrire_graphviz(f2, a);
+// }
