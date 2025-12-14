@@ -4,6 +4,7 @@
 *.png
 *.dot
 *.svg
+*.rs
 
 # Ignore tes exécutables spécifiques
 # (Ajoute ici le nom de ton programme final)
@@ -15,6 +16,7 @@ test_unitaires
 build/
 bin/
 obj/
+hero/
 
 main
 acte1
