@@ -14,9 +14,11 @@ Nom2 - prénom2 : BYLL CATARIA HERMANN
 Si vous avez des commentaires, remarques etc. pour le rendu, vous pouvez les 
 mettre ici:
 
-...
-...
-...
+Les tableaux de l'acte 5 sont au format du fichier tableau_test.tab, la fonction tableau_vers_arbre prend un fichier en argument, 
+lis le tableau et ajoute les caractèristiques une a une dans un arbre.
+les complexités des algorithmes sont en commentaires au dessus des fonctions.
+
+Nous avons tous les 2 participé a l'exercice secret ents.
 
 
 
