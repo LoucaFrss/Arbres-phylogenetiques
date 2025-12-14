@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * O(n), Parcourt chaque noeud une fois. O(h), Pile d'appels recursifs (hauteur de l'arbre).
+ */
 void analyse_arbre2(arbre racine, int *nb_esp, int *nb_carac)
 {
 
@@ -23,6 +26,9 @@ void analyse_arbre2(arbre racine, int *nb_esp, int *nb_carac)
        else // Si la racine n'a pas de sous-noeud, c'est une espèce.
               (*nb_esp)++;
 }
+/*
+ * O(n), Appelle analyse_arbre2 qui fait le travail. O(h), Meme que analyse_arbre2.
+ */
 void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac)
 {
        *nb_carac = 0;
@@ -30,16 +36,25 @@ void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac)
        analyse_arbre2(racine, nb_esp, nb_carac);
 }
 
+/*
+ * O(1), Verification simple des pointeurs. O(1), Pas d'allocation.
+ */
 int est_caractere(arbre racine)
 {
        return !((racine->gauche == NULL) && (racine->droit == NULL));
 }
+/*
+ * O(1), Meme verification. O(1).
+ */
 int est_espece(arbre racine)
 {
        return (racine->gauche == NULL) && (racine->droit == NULL);
 }
 
 /* ACTE II */
+/*
+ * O(n) dans le pire cas (arbre degenere), O(h) en moyenne pour un arbre equilibre. O(h), Pile recursive.
+ */
 /* Recherche l'espece dans l'arbre. Modifie la liste passée en paramètre pour y
  * mettre les caractéristiques. Retourne 0 si l'espèce a été retrouvée, 1 sinon.
  */
@@ -62,6 +77,9 @@ int rechercher_espece(arbre racine, char *espece, liste_t *seq)
        return 1;
 }
 
+/*
+ * O(k * h) ou k est la longueur de la sequence, Chaque etape descend dans l'arbre et compare. O(h), Recursion.
+ */
 /* Doit renvoyer 0 si l'espece a bien ete ajoutee, 1 sinon, et ecrire un
  * message d'erreur.
  */
@@ -108,6 +126,9 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq)
        return ajouter_espece(&(*a)->gauche, espece, seq);
 }
 
+/*
+ * O(n), Visite chaque noeud une fois. O(n), Files pour stocker les noeuds par niveau.
+ */
 /* Doit afficher la liste des caractéristiques niveau par niveau, de gauche
  * à droite, dans le fichier fout.
  * Appeler la fonction avec fout=stdin pour afficher sur la sortie standard.
@@ -148,6 +169,9 @@ void afficher_par_niveau(arbre racine, FILE *fout)
 
 // Acte 4
 
+/*
+ * O(k) ou k est la longueur de la liste. O(1), Pas d'allocation supplementaire.
+ */
 int contient_liste(liste_t *l, char *v)
 {
        for (cellule_t *c = l->tete; c != NULL; c = c->suivant)
@@ -158,6 +182,9 @@ int contient_liste(liste_t *l, char *v)
        return 0;
 }
 
+/*
+ * O(n), Visite tous les noeuds. O(h), Recursion, plus la liste de sortie (O(m)).
+ */
 void collecter_especes(arbre a, liste_t *especes)
 {
        if (!a)
@@ -173,6 +200,9 @@ void collecter_especes(arbre a, liste_t *especes)
        }
 }
 
+/*
+ * O(n), Traverse l'arbre entier. O(h), Recursion.
+ */
 int verifier_et_compter(arbre a, liste_t *l, int *compte)
 {
        if (!a)
@@ -197,6 +227,9 @@ int verifier_et_compter(arbre a, liste_t *l, int *compte)
        }
 }
 
+/*
+ * O(n + k), Appel a verifier_et_compter (O(n)) plus comptage de la liste (O(k)). O(h), Recursion de verifier_et_compter.
+ */
 int est_clade(arbre a, liste_t *l)
 {
        int compte = 0;
@@ -216,6 +249,9 @@ int est_clade(arbre a, liste_t *l)
        return compte == longueur_l;
 }
 
+/*
+ * O(n) dans le pire cas, Peut visiter tout l'arbre. O(h), Recursion.
+ */
 arbre *trouve_clade(arbre *a, liste_t *l)
 {
        if (!*a)
@@ -252,4 +288,47 @@ int ajouter_carac(arbre *a, char *carac, cellule_t *seq)
        n->valeur = carac;
 
        return 1;
+}
+
+/*
+ * O(m * k * h), Pour chaque espece (m), insertion avec sequence de longueur k, dans un arbre de hauteur h. O(n + m*k), Arbre construit (O(n)) plus tableaux temporaires.
+ */
+arbre tableau_vers_arbre(FILE *f)
+{
+       int n, m;
+       fscanf(f, "%d %d ", &n, &m);
+       char **tab_carac = malloc(n * sizeof(char *));
+       char **tab_esp = malloc(m * sizeof(char *));
+       char buf[1000];
+       arbre a = NULL;
+       fscanf(f, " ");
+       for (int i = 0; i < n; i++)
+       {
+              fscanf(f, "%s ", buf);
+              tab_carac[i] = malloc((strlen(buf) + 1) * sizeof(char));
+              strcpy(tab_carac[i], buf);
+       }
+
+       for (int i = 0; i < m; i++)
+       {
+              fscanf(f, "%s ", buf);
+              tab_esp[i] = malloc((strlen(buf) + 1) * sizeof(char));
+              strcpy(tab_esp[i], buf);
+              liste_t *l = malloc(sizeof(liste_t));
+              init_liste_vide(l);
+              char valeur;
+
+              for (int j = 0; j < n; j++)
+              {
+                     fscanf(f, "%c ", &valeur);
+                     if (valeur == 'X')
+                     {
+                            ajouter_queue(l, tab_carac[j]);
+                     }
+              }
+              printf("espece %s:", tab_esp[i]);
+              afficher_liste(l);
+              ajouter_espece(&a, tab_esp[i], l->tete);
+       }
+       return a;
 }

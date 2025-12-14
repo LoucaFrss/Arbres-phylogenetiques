@@ -1,8 +1,8 @@
-all: main acte1 acte2 acte3 acte3b acte4 recherche-AppoLab ents
+all: main acte1 acte2 acte3 acte3b acte4 acte5 recherche-AppoLab ents
 
 
 CC=clang
-CFLAGS+= -g -Wall -Wextra -Werror -Wformat -Wno-unused-parameter -gdwarf-4 #-fsanitize=address #-fsanitize=leak -fno-omit-frame-pointer
+CFLAGS+= -g -Wall -Wextra -Werror -Wformat -Wno-unused-parameter -gdwarf-4  -O3#-fsanitize=address #-fsanitize=leak -fno-omit-frame-pointer
 LDFLAGS+= #-fsanitize=address #-fsanitize=leak -fno-omit-frame-pointer
 
 
@@ -27,6 +27,7 @@ acte2: acte2.o $(OBJS)
 acte3: acte3.o $(OBJS)
 acte3b: acte3b.o $(OBJS)
 acte4: acte4.o $(OBJS)
+acte5: acte5.o $(OBJS)
 
 .PHONY: tests_acte1 tests_acte2 tests_acte3 tests_acte3b tests_acte4
 

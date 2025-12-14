@@ -28,4 +28,6 @@ void afficher_par_niveau(arbre racine, FILE *fout);
 // espèces/feuilles.
 int ajouter_carac(arbre *a, char *carac, cellule_t *seq);
 
+arbre tableau_vers_arbre(FILE *f);
+
 #endif
